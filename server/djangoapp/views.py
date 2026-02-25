@@ -20,18 +20,15 @@ logger = logging.getLogger(__name__)
 # Create a `login_user` view to handle sign in request
 @csrf_exempt
 def login_user(request):
-    # Get username and password from request body
     data = json.loads(request.body)
     username = data['userName']
     password = data['password']
 
-    # Try to authenticate user
     user = authenticate(username=username, password=password)
 
     data = {"userName": username}
 
     if user is not None:
-        # If authentication successful, log in the user
         login(request, user)
         data = {"userName": username, "status": "Authenticated"}
 
@@ -41,19 +38,50 @@ def login_user(request):
 # Create a `logout_request` view to handle sign out request
 @csrf_exempt
 def logout_request(request):
-    # Terminate user session
     logout(request)
-
-    # Return empty username after logout
     data = {"userName": ""}
-
     return JsonResponse(data)
 
 
 # Create a `registration` view to handle sign up request
-# @csrf_exempt
-# def registration(request):
-#     pass
+@csrf_exempt
+def registration(request):
+    # Load JSON data from request body
+    data = json.loads(request.body)
+
+    username = data['userName']
+    password = data['password']
+    first_name = data['firstName']
+    last_name = data['lastName']
+    email = data['email']
+
+    username_exist = False
+
+    try:
+        # Check if username already exists
+        User.objects.get(username=username)
+        username_exist = True
+    except:
+        logger.debug("{} is new user".format(username))
+
+    if not username_exist:
+        # Create user
+        user = User.objects.create_user(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            password=password,
+            email=email
+        )
+
+        # Login user
+        login(request, user)
+
+        data = {"userName": username, "status": "Authenticated"}
+        return JsonResponse(data)
+    else:
+        data = {"userName": username, "error": "Already Registered"}
+        return JsonResponse(data)
 
 
 # Update the `get_dealerships` view to render the index page

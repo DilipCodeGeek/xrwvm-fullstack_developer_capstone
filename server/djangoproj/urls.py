@@ -11,8 +11,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('djangoapp/', include('djangoapp.urls')),
 
-    # Home page
-    path('', TemplateView.as_view(template_name="Home.html")),
+    # Home page (React)
+    path('', TemplateView.as_view(template_name="index.html")),
 
     # About page
     path('about/', TemplateView.as_view(template_name="About.html")),
@@ -20,7 +20,10 @@ urlpatterns = [
     # Contact page
     path('contact/', TemplateView.as_view(template_name="Contact.html")),
 
-    # ✅ Login page (React)
+    # Login page (React)
     path('login/', TemplateView.as_view(template_name="index.html")),
-    
+
+    # Register page (React)
+    path('register/', TemplateView.as_view(template_name="index.html")),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
