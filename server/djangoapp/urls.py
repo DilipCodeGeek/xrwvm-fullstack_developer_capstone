@@ -6,23 +6,42 @@ from . import views
 app_name = 'djangoapp'
 
 urlpatterns = [
-    # path for registration
-    path(route='register', view=views.registration, name='register'),
 
-    # path for login
-    path(route='login', view=views.login_user, name='login'),
+    # =========================
+    # User Authentication APIs
+    # =========================
 
-    # path for logout
-    path(route='logout', view=views.logout_request, name='logout'),
+    path('register', views.registration, name='register'),
+    path('login', views.login_user, name='login'),
+    path('logout', views.logout_request, name='logout'),
 
-    # path for get cars API
-    path(route='get_cars', view=views.get_cars, name='getcars'),
+    # =========================
+    # Car Models API
+    # =========================
 
-    # path for dealer reviews view
-    # path(route='dealer/<int:dealer_id>/reviews', view=views.get_dealer_reviews, name='dealer_reviews'),
+    path('get_cars', views.get_cars, name='getcars'),
 
-    # path for add a review view
-    # path(route='add_review', view=views.add_review, name='add_review'),
+    # =========================
+    # Dealership APIs
+    # =========================
+
+    # Get all dealers
+    path('get_dealers', views.get_dealerships, name='get_dealers'),
+
+    # Get dealers by state
+    path('get_dealers/<str:state>', views.get_dealerships, name='get_dealers_by_state'),
+
+    # Get dealer details
+    path('dealer/<int:dealer_id>', views.get_dealer_details, name='dealer_details'),
+
+    # Get dealer reviews with sentiment
+    path('reviews/dealer/<int:dealer_id>', views.get_dealer_reviews, name='dealer_reviews'),
+
+    # =========================
+    # Add Review API
+    # =========================
+
+    path('add_review', views.add_review, name='add_review'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
